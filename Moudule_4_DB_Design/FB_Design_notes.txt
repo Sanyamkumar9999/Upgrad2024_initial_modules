@@ -1,0 +1,394 @@
+
+Datawarehouse:
+
+Subject-oriented: A data warehouse should contain information about a few well-defined subjects rather than the enterprise.
+Integrated: A data warehouse is an integrated repository of data. It contains information from various systems within an organisation.
+Non-volatile: The data values in a database cannot be changed without a valid reason.
+Time-variant: A data warehouse contains historical data for analysis.
+
+Dimenional Modeling:
+1. Facts      - numeric data 
+2. Dimension  - 
+
+Dimension modeling:
+STAR SCHEMA
+
+SETL - Select, extraction, transformation, loading
+
+Relational Data Modl:
+Tables / Columns
+Contraints:
+1. Entity Constraints:		Unique, Null, Primary key
+2. Refrential Constraints:	Foreign key
+3. Semantic Constraints:  	Allowing only certain values in a column and ensuring that the values are in a specified format or belong to a certain rangee.g. mob num shall not be less than 10 digits.
+
+ER Diagrams:
+Cardinalities: 1-1, 1-M, M-1, M-M 
+
+
+SQL:
+DDL: CREATE, ALTER, DROP
+DML: SELECT, INSERT, UPDATE, DELETE
+
+where, 
+wild operators - %, _
+like
+Between -- include boundaries
+group by
+order by 
+having
+reverse() & rand(), celi(), pow()
+regex e.g. where name regexp 'car' or where name regexp '^[abcd].*er$'  -- start with A or B or C or D and end with E or R and in between anything
+Nested Queries 
+CTEs - common table expressions: using with clause
+views: 
+
+Set Theory: union, intersection, union all
+joins - inner, left, outer
+from A inner join B on A.id = B.id or  using(id) 
+
+Analytical func:
+1. rank()
+RANK() OVER (
+  PARTITION BY <expression>[{,<expression>...}]
+  ORDER BY <expression> [ASC|DESC], [{,<expression>...}]
+)
+
+2. dense_rank(): 
+3. precent_rank():
+4. row_number()
+ROW_NUMBER() OVER (
+  PARTITION BY <expression>[{,<expression>...}]
+  ORDER BY <expression> [ASC|DESC], [{,<expression>...}]
+)
+
+RANK(): Rank of the current row within its partition, with gaps
+DENSE_RANK(): Rank of the current row within its partition, without gaps
+PERCENT_RANK(): Percentage rank value, which always lies between 0 and 1
+
+example:
+select 
+	customer_name, 
+	count(distinct order_id) as order_count,
+	rank() over(order by count(distinct order_id) desc) as order_rank,
+	dense_rank() over(order by count(distinct order_id) desc) as order_dense_rank,
+	rank() over(order by count(distinct order_id) desc) as order_row_num 
+from market_fact_full as m 
+inner join 
+cust_dimen as c 
+on m.cust_id = c.cust_id 
+group by customer_name;
+
+Named Window:
+WINDOW window_name AS (window_spec)
+  [, window_name AS (window_spec)] ...
+
+The order in which the various SQL statements appear in a query is as follows: 
+
+SELECT > FROM > JOIN > WHERE > GROUP BY > HAVING > WINDOW > ORDER BY  
+** WINODW comes before order by and after group by only 
+** window names must be unique 
+
+e.g. 
+SELECT *,
+RANK() over w 'Rank',
+DENSE_RANK() over w 'Dense Rank',
+PERCENT_RANK() over w 'Percent Rank'
+FROM shipping_dimen 
+WINDOW w as (PARTITION BY ship_mode ORDER BY COUNT(*))
+
+FRAMES: 
+here windows are dynamic e.g. moving averages, running total 
+
+'unbounded preceding' - moving averages 
+in excel - start from first row to calculate the average till last rows. e.g. AVERAGE($C$3:C3) to =AVERAGE($C$3:C7)
+in sql   - 
+SELECT Year, Runs, AVG(Runs) OVER (ORDER BY Year ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS Moving_Average
+FROM Kohli_Runs;
+
+** in case of 5 yrs of mv - use 4 instead of "UNBOUNDED PRECEDING"
+
+
+Frame example:
+with tab1 as (
+select ship_date, sum(shipping_cost) as daily_total 
+from market_fact_full as m inner join shipping_dimen as s on m.ship_id = s.ship_id 
+group by ship_date 
+)
+select *, sum(daily_total) over w1 as running_total, 
+		  avg(daily_total) over w2 as moving_avg 
+	from tab1 
+	window w1 as (order by ship_date rows unbounded preceding), 
+		   w2 as (order by ship_date rows 6 preceding); 
+
+
+Frames:
+* if current pointer is at row=5
+order by x rows 3 preceding                               - frame is row 2 to row 5 (5-3 = 2 to current row)
+order by x rows between 1 preceding and 1 following 	  - frame is row 4 to row 6
+order by x asc rows between 1 following and 3 following   - frame is row 6 to row 8
+order by x desc rows between 1 following and unbounded following - frame is row 4 to row 1 (note - rows are in desc)
+
+UNBOUNDED, PRECEDING, FOLLOWING, BETWEEN 
+
+currentrow, unbounded preceding, unbounded following, expr preceding, expr following 
+
+
+LEAD() & LAG()
+You can apply a row number function to the table to get index values for each row. Now, apply a self join on the table to get two sets of row number values. Finally, you can apply the required computation to get the next date of order in the same row as the current one. There is a much easier method, which has been explained in the rest of the video.
+
+LEAD or LAG(expr[, offset[, default]])
+  OVER (Window_specification | Window_name) 
+
+
+CASE Stmts:
+CASE
+  WHEN condition1 THEN result1
+  WHEN condition2 THEN result2
+  .
+  .
+  WHEN conditionN THEN resultN
+  ELSE result
+END AS column_name;
+
+
+UDFs:
+
+DELIMITER $$
+
+CREATE FUNCTION function_name(func_parameter1, func_parameter2, ...)
+  RETURN datatype [characteristics]
+/*      func_body      */
+  BEGIN
+    <SQL Statements>
+    RETURN expression;
+END ; $$
+
+DELIMITER ;
+
+CALL function_name;
+
+e.g. 
+DELIMITER $$
+
+CREATE FUNCTION profitType(profit int)
+RETURN VARCHAR(30) DETERMINISTIC              
+BEGIN
+
+DECLARE message VARCHAR(30);
+IF profit<-500 THEN 
+	SET message = 'Huge Loss';
+ELSEIF profit between -500  and 0 then 
+	SET message = 'Bearable Loss';
+	
+ELSEIF profit between 0 and 500 then 
+	SET message = 'Decent Profit';
+ELSE 
+	SET message = 'Great profit';
+END IF;
+RETURN message;
+
+END;
+$$
+DELIMITER; 
+
+(You need to specify the Deterministic keyword to ensure that the output is the same for the same input values. This is disabled in MySQL by default.)
+
+
+Stored Procs:
+DELIMITER $$
+
+CREATE PROCEDURE Procedure_name (<Paramter List>)
+BEGIN
+  <SQL Statements>
+END $$
+
+DELIMITER ;
+
+CALL Procedure_name;
+
+
+e.g.
+DELIMITER $$
+
+CREATE PROCEDURE get_sales_customers(sales_input int)
+BEGIN
+	SELECT distinct cust_id,
+					rount(sales) as sales_amt 
+	from market_fact_full 
+	where round(sales)> sales_input
+	order by sales;
+	
+END $$
+DELIMITER; 
+
+call get_sales_customers(300); 
+drop procedure get_sales_customers;
+
+UDF	Stored Procedure
+1. It supports only the input parameter, not the output.	1. It supports input, output and input-output parameters.
+2. It cannot call a stored procedure.						2. It can call a UDF.
+3. It can be called using any SELECT statement.				3. It can be called using only a CALL statement.
+4. It must return a value.									4. It need not return a value.
+5. Only the 'select' operation is allowed.					5. All database operations are allowed.
+
+
+Cursors:
+e.g.
+You can use cursors for bank account transactions to move money back and forth between the bank and a customer's account in that bank in real-time. You can do this individually for each customer at all times, by processing each banking request individually.
+
+
+Best Practices:
+1. comment: --, /* .... */
+2. alias for tables, cols, 
+3. SQL formatter: https://www.dpriver.com/pp/sqlformat.htm
+
+
+Index: DDL, 2 ways :
+CREATE INDEX index_name ON table_name (column_1, column_2, ...);
+ALTER TABLE table_name ADD INDEX index_name(column_1, column_2, ...);
+
+ALTER TABLE table_name DROP INDEX index_name;
+
+Clustered Index Vs Non-clustered Index:
+
+clustered Index - basically primary key. e.g. market_fact_id
+nonclustered index - combination of cols which may or not part of pk. e.g. cust_id, sales  
+
+
+Clustered Index	Non-Clustered Index
+1. This is mostly the primary key of the table.			1. This is a combination of one or more columns of the table.
+2. It is present within the table.						2. The unique list of keys is present outside the table.
+3. It does not require a separate mapping.				3. The external table points to different sections of the main table.
+4. It is relatively faster.								4. It is relatively slower.
+
+Order of Query Execution:
+1. From (joins)
+2. Where
+3. Gorup by
+4. having
+5. window functions
+6. select
+7. distinct
+8. order by
+9. limit and offset 
+
+Use inner joins wherever possible to avoid having any unnecessary rows in the resultant table.
+Apply all the required filters to get only the required data values from multiple tables.
+Index the columns that are frequently used in the WHERE clause.
+Avoid using DISTINCT while using the GROUP BY clause, as it slows down query processing.
+Avoid using SELECT * as much as possible. Select only the required columns.
+Use the ORDER BY clause only if it is absolutely necessary, as it is processed late in a query.
+Avoid using LIMIT and OFFSET as much as possible. Instead, apply appropriate filters using the WHERE clause.
+
+
+
+
+
+
+************************************************************************************************************************************
+open question: 
+Advanced SQL and Best Practices - Module 7 - windows function
+Partitioning - optional question
+
+SELECT 
+    orderNumber,
+    priceEach AS individualOrderAmount,
+    SUM(priceEach) OVER (PARTITION BY orderNumber) AS totalOrderAmount
+FROM 
+    OrderDetails
+ORDER BY 
+    orderNumber ASC, 
+    priceEach DESC;
+	
+	
+	
+	
+	
+Sample queries:
++-------------+-----------------------+--------------------+
+| orderNumber | individualOrderAmount | totalOrderAmount   |
++-------------+-----------------------+--------------------+
+|       10100 |                   136 | 301.84000000000003 |
+|       10100 |                 75.46 | 301.84000000000003 |
+|       10100 |                 55.09 | 301.84000000000003 |
+|       10100 |                 35.29 | 301.84000000000003 |
+|       10101 |                167.06 |                352 |
+|       10101 |                108.06 |                352 |
+|       10101 |                 44.35 |                352 |
+|       10101 |                 32.53 |                352 |
+|       10102 |                 95.55 |             138.68 |
+|       10102 |                 43.13 |             138.68 |
+|       10103 |                 214.3 |  849.4000000000001 |
+|       10103 |                121.64 |  849.4000000000001 |
+|       10103 |                119.67 |  849.4000000000001 |
+|       10103 |                  94.5 |  849.4000000000001 |
+|       10103 |                 92.19 |  849.4000000000001 |
+|       10103 |                 86.92 |  849.4000000000001 |
+|       10103 |                 61.84 |  849.4000000000001 |
+|       10103 |                 58.34 |  849.4000000000001 |
++-------------+-----------------------+--------------------+	
+
+select 
+p.amount, f.title 
+from 
+payment p, rental r, inventory i, film f
+where 
+p.rental_id = r.rental_id
+r.inventory_id = i.inventory_id 
+i.film_id = f.film_id 
+
+select p.city from (
+select 
+ c.city, sum(p.amount) as su   
+from 
+payment p, staff s, address a, city c 
+where 
+p.staff_id = s.staff_id
+and s.address_id = a.address_id 
+and a.city_id = c.city_id  
+group by c.city_id 
+order by su desc 
+limit 1 
+)p 
+
+
+select max(concat(cc.first_name, ' ', cc.last_name)) as customer_name 
+from rental r, customer cc, address a, city c 
+where
+r.customer_id = cc.customer_id 
+and cc.address_id = a.address_id 
+and a.city_id = c.city_id
+and c.city = 'Arlington'
+group by cc.customer_id 
+
+
+
+
+with cust_rent as (
+select cc.customer_id, r.rental_id, cc.address_id, cc.first_name, cc.last_name 
+from customer cc, rental r 
+where 
+cc.customer_id = r.customer_id 
+), adr_city as (
+select  a.address_id c.city_id  
+from city c, address a 
+where 
+c.city_id = a.city_id 
+c.city = 'Arlington'
+) 
+select concat(cr.first_name, " ", cr.last_name)
+from cust_rent cr left join adr_city ac on cr.address_id = ac.address_id
+;
+
+with cust_summ as (
+select m.cust_id, c.cusomer_name, round(sum(m.sales)) as total_sales, 
+		percent_rank() over(order by round(sum(m.sales)) desc) as perc_rank 
+from market_fact_full as m left join cust_dimen as c on m.cust_id = c.cust_id 
+group by cust_id 
+)
+select *, case when perc_rank < 0.1 then 'Gold'
+				when perc_rank < 0.5 then 'Silver'
+				ELSE 'Bronze'
+			END as cust_cate\
+from cust_summ; 

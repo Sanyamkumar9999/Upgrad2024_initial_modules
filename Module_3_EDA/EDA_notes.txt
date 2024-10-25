@@ -1,0 +1,299 @@
+
+Sourcing --> CLeaning --> Univariate Analysis --> Bivariate Analysis --> Derived Metrics
+
+Telecom:
+optimize prepaid/postpaid plans for customers
+predict & prevent customer churn
+e.g. men churn more or women, senior citizens usage and their churn 
+market basket analysis'. - product selling together. top up of 100 multiples are much effective e.g. 181 + 19 topups altogether
+
+HR: 
+attrition data, emp gonna leave or not, demographics data, roles perform, wages etc
+data doesn't have emotions -- so advantage & disadvantge both 
+e.g. data insight:
+1. sick leaves increases -- > emp leaving
+2. participation on extra currl activities goes down
+3. stock selling 
+
+Retail: product purchasing, product stocking, product pricing
+
+Media: 
+Advertising - TRP rating, Data journalism - Vote predictions 
+
+Public Data:
+1. awesome-public-dataset
+2. data.gov.in
+3. census data  - https://censusindia.gov.in/
+
+
+Categorical - mode -- most frequent values
+Numerical   - mean but median is more preffered (50th percentile)
+mean vs median --- when there is outlier then median gives better result. Else both give same results.
+use mean when data is repetitive....lets say 1,1,1,2,2,3,4,6,6...
+
+arr=np.array([1,2,3,4,5]) 
+print("Mean:",np.mean(arr)) 
+print("Median:",np.median(arr)) 
+arr=np.array([1,2,3,4,100]) 
+print("Mean:",np.mean(arr)) 
+print("Median:",np.median(arr))
+
+
+segmentation:
+seggregation of numerical & categorical cols
+
+num_col - age, fare
+cate_col - survived, pclass, sex, age (since unique value are very less), embark
+extra_col - no need of analysis e.g. id, name
+
+df.nunique()
+
+num_cols=["Age","Fare"] 
+cat_cols=["Survived","Pclass","Sex","SibSp","Parch","Embarked"] 
+extra_cols=["PassengerId","Name","Ticket"]
+
+histogram () -> for numerical 
+countplot()  -> for categorical 
+
+** countplot & histogram are type of Barplot, with default of y axis as count only. 
+in Barplot y axis can be anything like min, max etc
+
+
+# Quartile = Quarter + Percentile 
+# Q1= First Quartile (25th Percentile) --> (Left/bottom side of the box) 
+# Q2= Second Quartile (50th Percentile) --> (Middle line of the box) (Median) 
+# Q3= Third Quartile (75th Percentile) --> (Right/top side of the box) 
+# Two Whiskers: (Emperical Relationships) 
+# Lower Whisker: Q1-1.5*(Q3-Q1)             #22-*1.5(35-22) 
+# Upper Whisker: Q3+1.5*(Q3-Q1) 
+# Blackdots: Outliers (Extreme Values) 
+# IQR : Inter Quartile Range( Q3-Q1)
+
+Bivariate Analysis:
+
+Numeric Vs Categorical:
+Boxplot()
+sns.boxplot(x=df1['Sex'], y=df1['Age'])
+sns.boxplot(x=df1['Sex'], y=df1['Fare'])
+plt.show()
+
+Numeric Vs Numeric:
+scatter graph()
+sns.scatterplot(x=df1['Age'], y=df1['Fare'])
+plt.show()
+
+
+Multivariate Analysis:  kind{‘scatter’, ‘kde’, ‘hist’, ‘reg’}
+pairplot()
+sns.pairplot(df1[num_cols], kind='scatter')
+plt.show()
+sns.heatmap(df1[num_cols].corr(), annot=True)
+plt.show()
+
+!pip install --upgrade seaborn
+
+
+Data Cleaning:
+
+1. Missing Values: better to leave the missing values. Other ways are - mean / median (in case outliers are there) 
+
+2. Standardizing the values:
+Remove outliers e.g. in summer recorded temp is -20, or in winter its +40 
+Standardise units & Scale values: e.g. lower() etc, remove spaces, yyyy-mm-dd etc 
+	e.g. if required kgs vs lbs, gallon vs litre etc mt vs cm vs milimt
+Standardise precision: level of accuracy e.g. 2.14 or 381k mill forcast of values etc.
+
+3. Invalid Valies
+junk values, encoding, 
+
+4. Filter Data: 
+deduplicate data, filter row, filter col, aggregate data 
+
+Finding missing values in File:
+df.isnull().sum() 
+
+df = df[df.isnull().sum() == 5]
+
+for dropping duplicates
+df = df.drop_duplicates()
+
+Removing Outliers:
+https://stackoverflow.com/questions/35827863/remove-outliers-in-pandas-dataframe-using-percentiles
+https://www.kdnuggets.com/2017/02/removing-outliers-standard-deviation-python.html
+
+Univariate Analysis:
+categorical & Numberical
+group by -> categorical & sum or additive -> numerical
+categorical - ordered (e.g. feb, mar, jun) or (12th, grad, post grad etc)
+			- unordered (e.g. red, blue, green etc)
+			
+rank-frequency plots enable you to extract meaning even from seemingly trivial unordered categorical variables such as country, name of an artist, name of a github user etc.
+
+It is possible to extract meaningful insights from unordered categorical variables using rank-frequency plots
+Rank-frequency plots of unordered categorical variables, when plotted on a log-log scale, typically result in a power law distribution
+
+Uses of Mean/Median & Mode (categorical)
+
+Introduction to Segmented Univariate Analysis:
+Any categorical variable serve as basis of segmentation 
+
+Process of segmentation:
+raw data --> group by --> summarize --> compare
+
+"Don’t blindly believe in the averages of the buckets - check the distribution of each bucket closely.
+If the difference in means is small, you may not be able to draw inferences. hence we use - 
+hypothesis testing is used to ascertain whether the difference in means is significant or due to randomness.
+
+
+Bivariate Analysis:
+1. Continuous Variables: numbers, can be added up
+2. Categorical Variables: that can be group by 
+continuous vaiables as categorical var - age, height, temperature, salary, weight etc  
+
+Bivariate Analysis on Continuous Variables:
+correlation: -1 to +1 
+If one increases as the other increases, the correlation is positive
+If one decreases as the other increases, the correlation is negative
+If one stays constant as the other varies, the correlation is zero
+
+excel - =correl()
+		=randbetween(40,60)  -- generates random number between range. 
+python: df.corr().round(2)
+sns.heatmap(df_curr1.corr().round(2))
+
+method in corr(): corr(method='pearson') or kendall or spearman 
+
+
+scatter plots
+regression analysis
+correlation martix - heatmaps()
+
+Bivariate Analysis on categorical Variables:
+Contingency Tables
+Chi-Square Test
+Bar charts
+
+does one variable influence others, by what it influences others.
+
+Derived :
+
+Data insights:
+1. day of the week - restaurent sales from 4 diff counters - concluded 1 person was taking half day leave and so most sales was shifted to other counter.
+2. month of the date - It was observed that children born in June scored lower compared to those born in July, August, September etc. 
+
+Types of Derived Metrics:
+1. Type Driven Metrics:
+a. Steven's typology
+	i. nominal / Categorical variables - no orders e.g. colors
+	ii. Ordinal variables - e.g. graduate, postgrduate, etc
+	iii. Interval variables - e.g. celcius, temp --  mathematical difference between categories is meaningful but division or multiplication is not.
+							Interval variables are both nominal and ordinal.
+	iv. Ratios variables - e.g. sales, compare like 2x, 1.5x etc 
+							Ratio variables are nominal, ordinal and interval type.
+b. Lattitude & Longitude 
+c. Email address
+d. URL 
+3. Date - month, year, date, day of week, weekday, time, hours etc 
+
+ordinal variable (but not interval or ratio) e.g. The grades of children e.g. A+. A, B+ B, C+, C
+interval type variable (but not ratio) e.g. name of a module in an UpGrad program e.g. module 1, 2, 3, 4, 5
+
+Feedback -- short / long &  can derive sentiments
+Location -- zipcode, longitude, lattitude, urban / rural/metro, dist, city, state, country etc
+
+https://www.graphpad.com/support/faqid/1089/
+
+Business Driven Metrics:
+Stud marks --> pass / fail? or CGPA cutoff?
+Banking --> no of tran in month --> min avg balance maintained --?
+			no of cards issued equals to traget?
+
+Data Driven Metrics:
+
+Type-Driven Methods: Focus on data types (quantitative, qualitative, discrete, continuous).
+Business Domain-Driven Methods: Tailored to educational, socioeconomic, and behavioral metrics.
+Data-Driven Methods: Utilize predictive, descriptive, diagnostic, and prescriptive analytics.
+
+
+Session: 1-Sep-2024:
+Swapnil Desai
+
+pd.set_option("display.max_columns",300) 
+pd.set_option("display.max_rows",500)
+
+missing_value_percentage = df.isna().sum()*100/df.shape[0]    # shows % of missing of values in df
+res = df.isna().sum()*100/df.shape[0] 
+res = res.sort_values(ascending=False)
+res
+
+df_clean = df.loc[:,missing_value_percentage<30]
+df_clean.isna().sum()*100/df.shape[0]
+
+result_asc_order = df_clean.isna().sum()*100/df_clean.shape[0]
+result_asc_order = result_asc_order.sort_values(ascending=True)
+result_asc_order
+
+
+
+#numerical cols-mmedian 
+df_clean["std_og_t2o_mou"].fillna(df_clean["std_og_t2o_mou"].median(),inplace=True) df_clean["loc_og_t2o_mou"].fillna(df_clean["loc_og_t2o_mou"].median(),inplace=True) df_clean["loc_ic_t2o_mou"].fillna(df_clean["loc_ic_t2o_mou"].median(),inplace=True) 
+#categorical cols 
+df_clean["date_of_last_rech_6"].fillna(df_clean["date_of_last_rech_6"].mode()[0],inplace=True) df_clean["date_of_last_rech_7"].fillna(df_clean["date_of_last_rech_7"].mode()[0],inplace=True) df_clean["last_date_of_month_7"].fillna(df_clean["last_date_of_month_7"].mode()[0],inplace=True) df_clean["last_date_of_month_8"].fillna(df_clean["last_date_of_month_8"].mode()[0],inplace=True)
+df_clean["last_date_of_month_9"].fillna(df_clean["last_date_of_month_9"].mode()[0],inplace=True)
+
+import warnings
+warnings.filterwarnings("ignore")
+
+
+df_clean["date_of_last_rech_6"].value_counts()
+df_clean.info(verbose=True)
+
+finding numeric datatype cols:
+numeric_cols=df_clean.select_dtypes(include=['float','int64']).columns
+numeric_cols
+
+imputing missing values in numeric datatype col
+df_clean[numeric_cols] = df_clean[numeric_cols].apply(lambda column: column.fillna(column.median()))
+df_clean.head()
+
+verifing the col 
+df_clean.isna().sum()*100/df_clean.shape[0]
+
+
+finding categoric datatype cols:
+cat_cols=df_clean.select_dtypes(include=['object']).columns
+cat_cols
+
+imputing missing values in categoric datatype col
+df_clean[cat_cols] = df_clean[cat_cols].apply(lambda column: column.fillna(column.mode()[0]))
+df_clean.head()
+
+verifing the col 
+df_clean.isna().sum()*100/df_clean.shape[0]
+
+
+### NaN
+
+obj_col_nan = df_clean.select_dtypes(include='objects')
+nan_count = obj_col_nan.isna().sum()
+nan_count
+
+str_nan_count = df_clean.apply(lambda cols:cols.astype(str).str.contains("nan",case="False", na=False).sum()) 
+str_nan_count = str_nan_count[str_nan_count>0] 
+str_nan_count
+
+df_clean.to_csv('clean_data.csv', index=False)
+
+
+Outliers Detection:
+1. z-score & IQR
+
+visualization - Boxplot & Scatter 
+
+outlier_IQR = df_clean[(df_clean['col1']<lower_range) | (df_clean['col1']>upper_range)]
+df_clean = df_clean.drop(outlier_IQR.index)
+
+
+
+
+#selecting object dtype cols num_cols = df_clean.select_dtypes(include = ["object"]).columns num_cols #impute missing vals in these cols with mode df_clean[num_cols] = df_clean[num_cols].apply(lambda column:column.fillna(column.mode())) df_clean.head()

@@ -1,0 +1,21 @@
+8-Sep-2024
+Data Visualization - Tanisha Medewala
+
+Bivariate Analysis:
+scatter plot
+correlation coefficient
+cross tabulation
+line graph
+
+Multivariate Analysis:
+pair plots
+heatmaps
+
+
+https://www.kaggle.com/datasets/jsphyg/tipping
+https://www.kaggle.com/competitions/titanic/data
+https://docs.google.com/presentation/d/1UXQ18OPKpPosv36QrLrFWSWxsMQJJvq91z_vWW8rews/edit?usp=sharing
+https://drive.google.com/file/d/1oAZjeo_nd5nR1ZjmlWv1U7yppcIP4Vrs/view?usp=sharing
+
+https://drive.google.com/file/d/1k6gWAnrtGWrb6vwl-pT19oksZhPUyln6/view?usp=sharing
+

@@ -1,0 +1,231 @@
+Upgrad AI & ML:
+
+Session 1 - Python Syntax - 10-Aug-2024 (By Shivan Garg)
+
+Notes:
+
+1. Variables cann't start with numbers
+2. Variables can have only "_" other like @, " " space not allowed
+3. Python is case sensitive
+
+Data Type:
+1. Integer - 2,4,6,-9,0
+2. Float - 	 15.86, 1.0 
+3. String -  'Ai', "ML" 
+
+Mathematical Operators:
++, -, *, / (division in float), ** (power), // interger or floor division, % (remainder or modulus)
+
+Indexing:
+U   p  g  r  a  d
+0   1  2  3  4  5 
+-6 -5 -4 -3 -2 -1  
+
+String:
+str[4], str[-2], 
+lower(), upper(), title(), capitalize(), len()
+isupper(), islower(), iscapitalize()
+strip(), lstrip(), rstrip()
+str1.strip()
+
+A = 'Data'; B = "Analysis"; C = "Pandas"
+print("{0} {1} using {2}".format(A,B,C))
+
+Data Types:
+data type conversions: 
+
+11-Aug-2024
+Session 2 : Python Data Structures
+https://drive.google.com/file/d/1Kx1M-g6oGTU5UIYu6OM9FLLoCi3upA62/view?usp=sharing
+
+Indexing on List:
+[1, 'hello', 3.14, True]
+0	  1		  2	 	3
+-4	  -3	  -2	-1
+
+String to List:
+split() - split the strings on whitespaces (default)
+split('.')
+
+List to String:
+use join()
+e.g.
+str = " ".join(<list1>)
+
+
+
+sort vs sorted
+sortes(list) -- is python func, will not change existing list but output is sorted.
+sort -- will make changes to existing list
+
+append vs extend vs insert
+
+#append: to add element in the end of the list 
+#insert: to add element at specific index of the list 
+#sort: to sort the data in ascending/descending order 
+#remove: to remove any element from list 
+#extend: to add multiple elements in the list in the end only 
+#clear: to remove all the elements of the list in one go 
+#count: to count the occurence of any element in the list 
+#pop: to return and remove the last element/specified index element from the list 
+#index: to fetch the index of any given element 
+#reverse: to reverse the list
+# list is defined by [] 
+# list maintain the order of elements 
+# list is mutable (changes are allowed) append/remove/extend/pop 
+# list supports indexing as well as slicing
+
+Dict:
+create dict in 2 ways: 
+using {} - {'a':1, 'b':2} & {}
+using Dict() - dict(a=1, b=2)
+
+Keys:
+# strings/integer/float/tuples
+# keys must be unique, non duplicates - why?
+Values:
+# strings/integer/float/boolean/list/dict/tup/set etc
+
+#keys: to fetch all the keys of the dictionary 
+#values: to fetch all the values of the dictionary 
+#update: used to the key:value pairs of one dict with the help of other 
+#pop: used to remove key value pair using given key 
+#popitem: used to remove the key value pair which is lastly added 
+#clear: same as list
+
+if keys not exists and if you try to access it from dict --> it will abort the prog. Hence use get()
+dict.get("key1", 'NA) --> here if key1 not exists, it will provide default value of NA
+e.g.
+input_dict={'Name': 'Monty', 'Profession': 'Singer' }
+ans = input_dict.get('Label', 'NA')
+print('Name' in input_dict) --> True 
+
+
+Tuple:
+sorted() on tuple -> converts into list
+sort() doen't work on tuple.
+
+** more efficient in memory as its structure cann't be modified while list is dynamic memory utilization.
+uses e.g. (lattitude, longitude)
+
+Set:
+# Set - for mathematical use cases: intersection, union, difference
+# doesn't maintain order, mutable, not support indexing & slicing, not allow dups
+# order not in control
+
+
+Control Stmts:
+1. If Then Else
+if <>:
+	<>
+if <>:
+	<>
+elif <>:
+	<>
+else:
+	<>
+
+2. For loop:
+enumerate()
+for n,word in enumerate(input_str):
+    print(word, n)
+
+3. while loop: similar to if syntax
+while <>:
+	<>
+	<>
+condition must change/close else while will go for ever.
+
+Comprehensions:
+List Comprehension:
+Extract the words that start with a vowel from a list input_list=[wood, old, apple, big, item, euphoria] using list comprehensions.
+input_list = ["wood", "old", "apple", "big", "item", "euphoria"]
+vowel_words = [word for word in input_list if word[0].lower() in 'aeiou']
+print(vowel_words)
+
+Functions:
+def <function_name>():
+	<>
+	return()
+
+def func1(*args):		# arguments are dynamic e.g. addition 
+
+lambda:
+lambda codes are not executed untill that line is being counted. and it diseappers after its work done. 
+in-line func.
+
+Map, Filter & Reduce:
+Iterable, bulk procssing
+map(arg1, arg2)   arg1 -> function & arg2 -> iterable obj
+
+e.g. Using the function Map, count the number of words that start with ‘S’ in input_list.
+input_list = ["Sun", "Moon", "Stars", "Sky", "Sea", "Mountain"]
+# Using map to create a list of booleans where True indicates the word starts with 'S'
+starts_with_s = map(lambda word: word.startswith('S'), input_list)
+# Summing up the True values (True is treated as 1 and False as 0)
+count = sum(starts_with_s)
+print(f"Number of words that start with 'S': {count}")
+
+extra learning: lambda, map, reduce, filter 
+https://python-course.eu/advanced-python/lambda-filter-reduce-map.php
+https://book.pythontips.com/en/latest/map_filter.html
+https://www.hackerrank.com/domains/python?filters%5Bsubdomains%5D%5B%5D=py-functionals
+
+
+Practices:
+Hackerrank
+Leetcode
+
+
+
+as part of maintenance -- quarterly paid?
+
+25-Aug-2024: Visualization 
+Amit Pandey (Fractal Analytics)
+9920258274
+amitpandeylearn@gmail.com
+https://drive.google.com/drive/folders/1jEgva_A-Xz3zT1aw-9jzC4oBpJScfs2S?usp=sharing
+https://drive.google.com/drive/folders/1jEgva_A-Xz3zT1aw-9jzC4oBpJScfs2S?usp=sharing
+
+pd.load
+df.info()
+df.dtypes()
+
+df.info(verbose=True)
+loan_data = pd.read_csv("loan.csv",sep=",",low_memory=False)
+
+
+plt.subplot(3, 3, 1) 
+sns.histplot(loan_data['loan_amt'].dropna(), kde=True) 
+plt.title('Histogram of Loan Amount by Amit')
+
+
+plt.subplot(2, 2, 1) 
+sns.histplot(loan_data['loan_amnt'].dropna(), kde=True) 
+plt.title('Histogram of Loan Amount by Amit') 
+plt.subplot(2, 2, 3) 
+sns.boxplot(x=loan_data['int_rate'].str.rstrip('%').astype(float)) 
+plt.title('Box Plot of Interest Rate') 
+plt.subplot(2, 2, 2) 
+sns.countplot(x=loan_data['grade']) 
+plt.title('Bar Plot of Loan Grades') 
+plt.subplot(2, 2, 4) 
+loan_term_counts = loan_data['term'].value_counts() 
+plt.pie(loan_term_counts, labels=loan_term_counts.index, autopct='%1.1f%%', startangle=140) 
+plt.title('Pie Chart of Loan Term') 
+plt.tight_layout() 
+plt.show()
+
+https://matplotlib.org/cheatsheets/cheatsheets.pdf
+
+# Stacked Chart
+sub_grade_counts = loan_data.groupby(['grade', 'sub_grade']).size().unstack().fillna(0) 
+sub_grade_counts.plot(kind='bar', stacked=True, ax=plt.gca()) 
+#Move the legend outside the plot 
+plt.legend(title='Sub-grade', bbox_to_anchor=(1.05, 1), loc='upper left', ncol=2) 
+plt.title('Stacked Bar Plot of Grade vs Sub-grade') 
+plt.show()
+
+box plot - skewness, outliers, median, 
+
+47.52
